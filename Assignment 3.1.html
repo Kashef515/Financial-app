@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Financial App Form</title>
+        <script>
+            function validateForm() {
+                // Get the field values
+                var loanAmount = document.forms["loanForm"]["loanAmount"].value;
+                var loanTerm = document.forms["loanForm"]["loanTerm"].value;
+                var interestRate = document.forms["loanForm"]["interestRate"].value;
+                // Declare regular expressions
+                var loanAmountRegex = /^\d{1,6}(\.\d{1,2})?$/;
+                var loanTermRegex = /^((1[2-9]|[1-9][0-9]|[1-9]0)|([1-9][0-9][0-9]))$|^(1[2-9][0-9][0-9]|2[0-9][0-9][0-9]|[1-9](00|[1-9]0))$/;
+                var interestRateRegex = /^\d{1,2}(\.\d{1,2})?$/;
+                // Validate input
+                var loanAmountValid = loanAmountRegex.test(loanAmount);
+                var loanTermValid = loanTermRegex.test(loanTerm);
+                var interestRateValid = interestRateRegex.test(interestRate);
+                // Display any necessary error messages
+                document.getElementById("loanAmountError").innerHTML = "";
+                document.getElementById("loanTermError").innerHTML = "";
+                document.getElementById("interestRateError").innerHTML = "";
+                if (!loanAmountValid) {
+                    document.getElementById("loanAmountError").innerHTML = "* Invalid loan amount";
+                }
+                if (!loanTermValid) {
+                    document.getElementById("loanTermError").innerHTML = "* Invalid loan term";
+                }
+                if (!interestRateValid) {
+                    document.getElementById("interestRateError").innerHTML = "* Invalid interest rate";
+                }
+                return loanAmountValid && loanTermValid && interestRateValid;
+            }
+            function saveLoanDetails() {
+                // Get the loan details from the form
+                var loanAmount = document.forms["loanForm"]["loanAmount"].value;
+                var loanTerm = document.forms["loanForm"]["loanTerm"].value;
+                var interestRate = document.forms["loanForm"]["interestRate"].value;
+                // Store the loan details in localStorage
+                localStorage.setItem("loanAmount", loanAmount);
+                localStorage.setItem("loanTerm", loanTerm);
+                localStorage.setItem("interestRate", interestRate);
+            }
+            function displayHelp() {
+                alert("This app will help you calculate loan payments and related information. Please enter the loan amount, loan term, and interest rate. The results of your calculation will be displayed after you click the 'Submit' button. Use the 'Save' button to save your loan details to your account. Use the 'Account' page to view your saved loan details and make payments. Use a secure login system to ensure the user's security and privacy.");
+            }
+            function viewAccountDetails() {
+                // Get the loan details from localStorage
+                var loanAmount = localStorage.getItem("loanAmount");
+                var loanTerm = localStorage.getItem("loanTerm");
+                var interestRate = localStorage.getItem("interestRate");
+                // Calculate the monthly payment
+                var monthlyPayment = loanAmount * interestRate / (1 - Math.pow(1 + interestRate, -1 * loanTerm));
+                // Display a message containing the loan details and monthly payment
+                 alert("Loan Amount: " + loanAmount + "\nLoan Term: " + loanTerm + "\nInterest Rate: " + interestRate + "\nMonthly Payment: " + monthlyPayment);
+            }
+            function makePayment() {
+            // Get the loan details from localStorage
+            var loanAmount = localStorage.getItem("loanAmount");
+            var loanTerm = localStorage.getItem("loanTerm");
+            var interestRate = localStorage.getItem("interestRate");
+            // Prompt the user to enter the payment amount
+            var paymentAmount = prompt("Enter the payment amount:");
+            // Validate the payment amount
+            if (paymentAmount == null || paymentAmount == "" || isNaN(paymentAmount)) {
+            alert("Error: Invalid payment amount!");
+            } 
+            else {
+            // Calculate the new loan balance and remaining loan term
+            var loanBalance = loanAmount - paymentAmount;
+            var remainingTerm = loanTerm - 1;
+            // Store the updated loan details in localStorage
+            localStorage.setItem("loanAmount", loanBalance);
+            localStorage.setItem("loanTerm", remainingTerm);
+            // Display a message to confirm that the payment has been made
+            alert("Payment of $" + paymentAmount + " has been made.\nNew Loan Balance: $" + loanBalance + "\nRemaining Loan Term: " + remainingTerm + " months");
+            }
+            function secureLogin(){
+            // Prompt user to enter their username and password
+            var username = prompt("Please enter your username:");
+            var password = prompt("Please enter your password:");
+            // Validate the username and password
+            if (username == "admin" && password == "password") {
+            alert("Welcome admin!");
+            } else {
+                alert("Invalid username or password!");
+                secureLogin();
+            }
+            }
+            // Call the secureLogin() function
+            secureLogin();
+    }
+              // Function to create the account form
+            function createAccountForm() {
+                // Create a div element to contain the form
+                var formDiv = document.createElement("div");
+                formDiv.setAttribute("class", "form-div");
+                // Create a form element
+                var form = document.createElement("form");
+                form.setAttribute("name", "createAccountForm");
+                // Create the username field
+                var usernameLabel = document.createElement("label");
+                usernameLabel.innerHTML = "Username:";
+                var usernameInput = document.createElement("input");
+                usernameInput.setAttribute("type", "text");
+                usernameInput.setAttribute("name", "username");
+                // Create the password field
+                var passwordLabel = document.createElement("label");
+                passwordLabel.innerHTML = "Password:";
+                var passwordInput = document.createElement("input");
+                passwordInput.setAttribute("type", "password");
+                passwordInput.setAttribute("name", "password");
+                // Create the submit button
+                var submitButton = document.createElement("input");
+                submitButton.setAttribute("type", "submit");
+                submitButton.setAttribute("value", "Create Account");
+                // Add the form elements to the form
+                form.appendChild(usernameLabel);
+                form.appendChild(usernameInput);
+                form.appendChild(document.createElement("br"));
+                form.appendChild(passwordLabel);
+                form.appendChild(passwordInput);
+                form.appendChild(document.createElement("br"));
+                form.appendChild(submitButton);
+                // Add the form to the div
+                formDiv.appendChild(form);
+                // Add the div to the page
+                document.body.appendChild(formDiv);
+            }
+            // Function to validate the form
+             function validateCreateAccountForm() {
+                // Get the form field values
+                var username = document.forms["createAccountForm"]["username"].value;
+                var password = document.forms["createAccountForm"]["password"].value;
+                // Validate the input
+                var usernameValid = username.length > 0;
+                var passwordValid = password.length > 0;
+                // Display any necessary error messages
+                document.getElementById("usernameError").innerHTML = "";
+                document.getElementById("passwordError").innerHTML = "";
+                if (!usernameValid) {
+                    document.getElementById("usernameError").innerHTML = "* Please enter a username";
+                }
+                if (!passwordValid) {
+                    document.getElementById("passwordError").innerHTML = "* Please enter a password";
+                }
+                return usernameValid && passwordValid;
+            }
+            // Function to create an account
+            function createAccount() {
+            // Validate the form
+                if (validateCreateAccountForm()) {
+                    // Get the form field values
+                    var username = document.forms["createAccountForm"]["username"].value;
+                    var password = document.forms["createAccountForm"]["password"].value;
+                    // Store the account details in localStorage
+                    localStorage.setItem("username", username);
+                    localStorage.setItem("password", password);
+                    // Display a message to confirm the account was created
+                    alert("Account created successfully!");
+                    // Remove the form from the page
+                    document.body.removeChild(document.querySelector(".form-div"));
+                    }
+             }
+            // Function to display the create account form
+            function displayCreateAccountForm() {
+                // Call the createAccountForm() function
+                createAccountForm();
+                // Add an event listener to the form
+                document.forms["createAccountForm"].addEventListener("submit", function(event) {
+                    event.preventDefault();
+                    // Call the createAccount() function
+                    createAccount();
+                });
+            }
+        </script>
+        <style>
+            form {
+                width: 400px;
+                padding: 20px;
+                background-color: #f2f2f2;
+                border-radius: 5px;
+            }
+            label {
+                font-weight: bold;
+                font-size: 20px;
+            }
+            input {
+                font-size: 16px;
+                padding: 5px 10px;
+                margin-bottom: 10px;
+                border-radius: 3px;
+                border: 1px solid #ccc;
+            }
+            input[type="submit"] {
+                background-color: #006eb1;
+                color: #fff;
+                font-weight: bold;
+            }
+            input[type="Help"] {
+                background-color: #2000b1;
+                color: #fff;
+                font-weight: bold;
+            }
+            input[type="View Account"] {
+                background-color: #006eb1;
+                color: #fff;
+                font-weight: bold;
+            }
+            input[type="Make Payment"] {
+                background-color: #006eb1;
+                color: #fff;
+                font-weight: bold;
+            }
+            .error {
+                font-weight: bold;
+                color: red;
+            }
+        </style>
+    </head>
+    <body>
+        <form>
+            <label>Loan Amount:</label>
+            <input type="number" min="0.00" max="100000.00" name="loanAmount" />
+            <br>
+            <label>Loan Term:</label>
+            <input type="number" min="0" max="1200" name="loanTerm" />
+            <br>
+            <label>Interest Rate:</label>
+            <input type="number" min="0.00" max="100.00" name="interestRate" />
+            <br>
+            <input type="button" value="Create Account" onclick="displayCreateAccountForm()" />
+            <br>
+            <br>
+            <input type="submit" value="Submit" onclick="saveLoanDetails()"/>
+            <br>
+            <input type="button" value="Help" onclick="displayHelp()" />
+            <br>
+            <input type="button" value="View Account" onclick="viewAccountDetails()" />
+            <br>
+            <input type="button" value="Make Payment" onclick="makePayment()" />
+        </form>
+        <a href="https://github.com/Kashef515/financial-app-form"> Financial App Form </a>
+    </body>
+</html>
